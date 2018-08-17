@@ -18,26 +18,21 @@ build:
     - msbuild Build.proj /p:Configuration=Release /p:Platform="Any CPU" /p:build_number=${BuildConfiguration[0]}
   artifacts:
     paths:
-      - "MessagingLibrary-4.5.2/bin/Release/"
-      - "MessagingLibrary-3.5/bin/Release/"
-      - "Consolidated Unit Tests-4.5.2/bin/Release/"
-      - "Consolidated Unit Tests-3.5/bin/Release/"
+      - "Admin-API-SDK/bin/Release/"
+      - "Admin-API-Unit Tests-461/bin/Release/"
      
 test:
   stage: test
   script:
     #Write Config File from Environment Variables
-    - echo "UserIdOrEmail:"$UserIdOrEmail > "Consolidated Unit Tests/Test Documents/MessageData.txt"
-    - echo "Password:"$Password >> "Consolidated Unit Tests/Test Documents/MessageData.txt"
-    - echo "ToAddress:"$ToAddress >> "Consolidated Unit Tests/Test Documents/MessageData.txt"
-    - echo "FromAddress:"$FromAddress >> "Consolidated Unit Tests/Test Documents/MessageData.txt"
+    - echo "EncryptionKey:"$EncryptionKey > "Admin-API-Unit Tests-461/Test Credentials/Credentials.txt"
+    - echo "Email:"$Email >> "Admin-API-Unit Tests-461/Test Credentials/Credentials.txt"
+    - echo "AutomationID:"$AutomationID >> "Admin-API-Unit Tests-461/Test Credentials/Credentials.txt"
     #Change directory and run unit tests
-    - nunit "Consolidated Unit Tests-4.5.2/bin/Release/Consolidated Unit Tests.dll" --result 452Result.xml
-    - nunit "Consolidated Unit Tests-3.5/bin/Release/Consolidated Unit Tests-3.5.dll" --result 35Result.xml
+    - nunit "Admin-API-Unit Tests-461/bin/Release/Admin-API-Unit Tests-461.dll" --result 461Result.xml
   artifacts:
     paths:
-      - "452Result.xml"
-      - "35Result.xml"
+      - "461Result.xml"
   dependencies:
     - build
       
@@ -47,12 +42,11 @@ release:
     - tags
   script:
     #Copy DLLs to lib folder for NuGet
-    - mkdir -p "lib/net452" && cp "MessagingLibrary-4.5.2/bin/Release/DataMotion Messaging Library.dll" "lib/net452/DataMotion Messaging Library.dll"
-    - mkdir -p "lib/net35" && cp "MessagingLibrary-3.5/bin/Release/DataMotion Messaging Library.dll" "lib/net35/DataMotion Messaging Library.dll"
-    - sed -i "s/version-num/${BuildConfiguration[0]}/g" MessagingLibrary.nuspec
-    - sed -i "s/author-name/DataMotion/g" MessagingLibrary.nuspec
-    - sed -i "s/copyright-date/Copyright 2018/g" MessagingLibrary.nuspec
-    - nuget pack MessagingLibrary.nuspec
+    - mkdir -p "lib/net461" && cp "Admin-API-SDK/bin/Release/DataMotion Admin Library.dll" "lib/net461/DataMotion Admin Library.dll"
+    - sed -i "s/version-num/${BuildConfiguration[0]}/g" AdminLibrary.nuspec
+    - sed -i "s/author-name/DataMotion/g" AdminLibrary.nuspec
+    - sed -i "s/copyright-date/Copyright 2018/g" AdminLibrary.nuspec
+    - nuget pack AdminLibrary.nuspec
     - nuget setApiKey $ApiKey -Source https://api.nuget.org/v3/index.json
     - nuget push *.nupkg -Source https://api.nuget.org/v3/index.json
   environment:

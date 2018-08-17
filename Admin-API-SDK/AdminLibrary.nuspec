@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DMWeb.Admin.NET.Messaging</id>
+    <version>version-num</version>
+    <title>DMWeb - Admin - .NET - Messaging</title>
+    <authors>author-name</authors>
+    <owners>author-name</owners>
+    <licenseUrl>https://support.datamotion.com/LICENSE.txt</licenseUrl>
+    <projectUrl>https://gitlab.com/DataMotion/DMWeb/SecureMail/CSharp/Administration/Rest/Library</projectUrl>
+    <iconUrl>https://support.datamotion.com/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is a .NET Software Development Kit (SDK) for DataMotion SecureMail Admin. This SDK is a wrapper providing helper functions for our Admin RESTful APIs. This code is simple in nature, and is present to provide a complete yet basic implementation.</description>
+    <releaseNotes>Initial Upload!</releaseNotes>
+    <copyright>copyright-date</copyright>
+    <tags>datamotion data motion secure mail securemail direct phi ihe ehr hipaa ehnac soap rest restful administration account company provisioning messaging email admin</tags>
+	<dependencies>
+		<dependency id = "System.Net.Http.Formatting" version="5.2.3.0" />
+		<dependency id = "Newtonsoft.Json" version="11.0.0.0" />
+	</dependencies>
+  </metadata>
+  <files>
+    <file src="lib/net461/DataMotion Admin Library.dll" target="lib/net461" />
+  </files>
+</package>
