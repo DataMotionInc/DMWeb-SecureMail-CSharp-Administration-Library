@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>DMWeb.Admin.NET.Messaging</id>
+    <id>DMWeb.NET.Administration</id>
     <version>version-num</version>
-    <title>DMWeb - Admin - .NET - Messaging</title>
+    <title>DMWeb - .NET - Administration</title>
     <authors>author-name</authors>
     <owners>author-name</owners>
     <licenseUrl>https://support.datamotion.com/LICENSE.txt</licenseUrl>
