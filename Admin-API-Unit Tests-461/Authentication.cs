@@ -9,7 +9,7 @@ namespace Admin_API_Unit_Tests_461
 { 
     public class AuthenticationContext
     {
-        public static DMAdmin admin = new DMAdmin("https://stage.datamotion.com");
+        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com");
     }
 
     [TestFixture]

@@ -11,7 +11,7 @@ namespace Admin_API_Unit_Tests_461
 {
     public class AccountContext
     {
-        public static DMAdmin admin = new DMAdmin("https://stage.datamotion.com");
+        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com");
         public static int uid = 0;
         public static string email = "";
     }
