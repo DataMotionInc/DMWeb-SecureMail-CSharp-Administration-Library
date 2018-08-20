@@ -46,7 +46,7 @@ release:
     - sed -i "s/version-num/${BuildConfiguration[0]}/g" AdminLibrary.nuspec
     - sed -i "s/author-name/DataMotion/g" AdminLibrary.nuspec
     - sed -i "s/copyright-date/Copyright 2018/g" AdminLibrary.nuspec
-    - nuget pack AdminLibrary.nuspec
+    - nuget pack Admin-API-SDK/AdminLibrary.nuspec
     - nuget setApiKey $ApiKey -Source https://api.nuget.org/v3/index.json
     - nuget push *.nupkg -Source https://api.nuget.org/v3/index.json
   environment:
