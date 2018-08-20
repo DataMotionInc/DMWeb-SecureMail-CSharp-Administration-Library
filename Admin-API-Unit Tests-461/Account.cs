@@ -163,7 +163,7 @@ namespace Admin_API_Unit_Tests_461
             Account.CreateUserRequest request = new Account.CreateUserRequest
             {
                 Email = "CreatedTestUser@dmfaketest.com",
-                UserTypeId = 34844
+                UserTypeId = 14164
             };
 
             Account.CreateUserResponse response = new Account.CreateUserResponse();
