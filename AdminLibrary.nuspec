@@ -11,11 +11,11 @@
     <iconUrl>https://support.datamotion.com/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This is a .NET Software Development Kit (SDK) for DataMotion SecureMail Admin. This SDK is a wrapper providing helper functions for our Admin RESTful APIs. This code is simple in nature, and is present to provide a complete yet basic implementation.</description>
-    <releaseNotes>Initial Upload!</releaseNotes>
+    <releaseNotes>release-notes</releaseNotes>
     <copyright>copyright-date</copyright>
     <tags>datamotion data motion secure mail securemail direct phi ihe ehr hipaa ehnac soap rest restful administration account company provisioning messaging email admin</tags>
 	<dependencies>
-		<dependency id = "System.Net.Http.Formatting" version="5.2.3.0" />
+		<dependency id = "System.Net.Http.Formatting.Extension" version="5.2.3.0" />
 		<dependency id = "Newtonsoft.Json" version="11.0.0.0" />
 	</dependencies>
   </metadata>
