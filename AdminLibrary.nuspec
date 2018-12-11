@@ -15,8 +15,9 @@
     <copyright>copyright-date</copyright>
     <tags>datamotion data motion secure mail securemail direct phi ihe ehr hipaa ehnac soap rest restful administration account company provisioning messaging email admin</tags>
 	<dependencies>
-		<dependency id = "System.Net.Http.Formatting.Extension" version="5.2.3.0" />
+		<dependency id = "Microsoft.AspNet.WebApi.Client" version="5.2.6" />
 		<dependency id = "Newtonsoft.Json" version="11.0.0.0" />
+    <dependency id="System.Security.Cryptography.Algorithms" version="4.3.1" />
 	</dependencies>
   </metadata>
   <files>
