@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Admin_API_SDK.Models;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Admin_API_SDK
 {
@@ -21,11 +22,13 @@ namespace Admin_API_SDK
         public DMAdmin()
         {
             _baseUrl = "https://ssl.datamotion.com";
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
 
         public DMAdmin(string url)
         {
             _baseUrl = url;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
         public class DMAuthentication
         {
