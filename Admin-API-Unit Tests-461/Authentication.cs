@@ -8,7 +8,7 @@ namespace DMWeb_REST_Admin_Unit_Tests
 { 
     public class AuthenticationContext
     {
-        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com");
+        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com/Remote");
     }
 
     [TestFixture]

@@ -21,7 +21,7 @@ namespace DMWeb_REST_Admin
 
         public DMAdmin()
         {
-            _baseUrl = "https://ssl.datamotion.com";
+            _baseUrl = "https://ssl.datamotion.com/Remote";
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
 
@@ -30,6 +30,7 @@ namespace DMWeb_REST_Admin
             _baseUrl = url;
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
+
         public class DMAuthentication
         {
             public string Encryption(byte[] json, byte[] key, byte[] IV)
@@ -88,7 +89,7 @@ namespace DMWeb_REST_Admin
                 client.DefaultRequestHeaders.Add("X-Company-Automation-ID", automationID);
                 client.DefaultRequestHeaders.Add("X-Hash", hashHeader);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/GetSessionKey", encryptedPayload);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetSessionKey", encryptedPayload);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -103,7 +104,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/GetEncryptionKey", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetEncryptionKey", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -118,7 +119,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/NewEncryptionKey", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/NewEncryptionKey", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -129,13 +130,16 @@ namespace DMWeb_REST_Admin
 
             public async Task<string> RevokeSessionKey()
             {
+                string baseUrl = _baseUrl;
+                baseUrl = baseUrl.Replace("/Remote", "");
+
                 HttpClient client = new HttpClient();
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
                 try
                 {
-                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/SecureMessagingAPI/Account/Logout", "");
+                    HttpResponseMessage response = await client.PostAsJsonAsync(baseUrl + "/SecureMessagingAPI/Account/Logout", "");
                     response.EnsureSuccessStatusCode();
                     string responseString = await response.Content.ReadAsStringAsync();
 
@@ -158,7 +162,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/List", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/List", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -173,7 +177,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Create", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Create", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -188,7 +192,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Read", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Read", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -203,7 +207,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Update", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Update", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -218,7 +222,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Delete", model);
+                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Delete", model);
                 response.EnsureSuccessStatusCode();
             }
 
@@ -228,7 +232,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Remote/Account/GetUserTypes");
+                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Account/GetUserTypes");
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -246,7 +250,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Remote/SMTP/GetCredentials");
+                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/SMTP/GetCredentials");
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -261,7 +265,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/Remote/SMTP/ResetPassword", -1);
+                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/ResetPassword", -1);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 
@@ -276,7 +280,7 @@ namespace DMWeb_REST_Admin
 
                 client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/Remote/SMTP/PutSmtpEndpoints", model);
+                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/PutSmtpEndpoints", model);
                 response.EnsureSuccessStatusCode();
                 string responseString = await response.Content.ReadAsStringAsync();
 

@@ -11,7 +11,7 @@ namespace DMWeb_REST_Admin_Unit_Tests
 {
     public class AccountContext
     {
-        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com");
+        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com/Remote");
         public static int uid = 0;
         public static string email = "";
     }
