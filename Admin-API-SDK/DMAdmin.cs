@@ -12,8 +12,8 @@ namespace DMWeb_REST_Admin
 {
     public class DMAdmin
     {
-        static string _baseUrl = "";
-        static string _sessionKey = "";
+        public static string _baseUrl = "";
+        public static string _sessionKey = "";
 
         public DMAuthentication Authentication = new DMAuthentication();
         public DMAccount Account = new DMAccount();
