@@ -4,11 +4,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Admin_API_SDK.Models;
 using System.Collections.Generic;
 using System.Net;
+using DMWeb_REST_Admin.Models;
 
-namespace Admin_API_SDK
+namespace DMWeb_REST_Admin
 {
     public class DMAdmin
     {

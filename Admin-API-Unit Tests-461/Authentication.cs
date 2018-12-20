@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
-using Admin_API_SDK;
-using Admin_API_SDK.Models;
 using System.Net.Http;
 using System.Reflection;
 using System.IO;
+using DMWeb_REST_Admin;
 
-namespace Admin_API_Unit_Tests_461
+namespace DMWeb_REST_Admin_Unit_Tests
 { 
     public class AuthenticationContext
     {
