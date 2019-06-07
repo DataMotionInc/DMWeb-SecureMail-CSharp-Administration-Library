@@ -1,15 +1,14 @@
 ﻿using NUnit.Framework;
-using Admin_API_SDK;
-using Admin_API_SDK.Models;
 using System.Net.Http;
 using System.Reflection;
 using System.IO;
+using DMWeb_REST_Admin;
 
-namespace Admin_API_Unit_Tests_461
+namespace DMWeb_REST_Admin_Unit_Tests
 { 
     public class AuthenticationContext
     {
-        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com");
+        public static DMAdmin admin = new DMAdmin("https://ssl.datamotion.com/Remote");
     }
 
     [TestFixture]
@@ -88,6 +87,12 @@ namespace Admin_API_Unit_Tests_461
             {
                 Assert.IsTrue(ex.Message.Contains("400"));
             }
+        }
+
+        [OneTimeTearDown]
+        public void LogOut()
+        {
+            AuthenticationContext.admin.Authentication.RevokeSessionKey().GetAwaiter().GetResult();
         }
     }
 }
