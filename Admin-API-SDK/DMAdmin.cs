@@ -4,16 +4,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Admin_API_SDK.Models;
 using System.Collections.Generic;
 using System.Net;
+using DMWeb_REST_Admin.Models;
 
-namespace Admin_API_SDK
+namespace DMWeb_REST_Admin
 {
     public class DMAdmin
     {
-        static string _baseUrl = "";
-        static string _sessionKey = "";
+        private static HttpClient client = new HttpClient();
+        public static string _baseUrl = "";
+        public static string _sessionKey = "";
 
         public DMAuthentication Authentication = new DMAuthentication();
         public DMAccount Account = new DMAccount();
@@ -21,7 +22,7 @@ namespace Admin_API_SDK
 
         public DMAdmin()
         {
-            _baseUrl = "https://ssl.datamotion.com";
+            _baseUrl = "https://ssl.datamotion.com/Remote";
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
 
@@ -30,6 +31,7 @@ namespace Admin_API_SDK
             _baseUrl = url;
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
+
         public class DMAuthentication
         {
             public string Encryption(byte[] json, byte[] key, byte[] IV)
@@ -51,8 +53,6 @@ namespace Admin_API_SDK
 
             public async Task<string> GetSessionKey(string encryptionKey, string email, string automationID)
             {
-                HttpClient client = new HttpClient();
-
                 //1. Start AES encryption
                 Aes aes = Aes.Create(); //Creates an Aes object
                 aes.KeySize = 256; //Set the key length to 256
@@ -88,58 +88,79 @@ namespace Admin_API_SDK
                 client.DefaultRequestHeaders.Add("X-Company-Automation-ID", automationID);
                 client.DefaultRequestHeaders.Add("X-Hash", hashHeader);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/GetSessionKey", encryptedPayload);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetSessionKey", encryptedPayload);
 
-                _sessionKey = JsonConvert.DeserializeObject<string>(responseString);
+                    client.DefaultRequestHeaders.Remove("X-Email");
+                    client.DefaultRequestHeaders.Remove("X-Iv");
+                    client.DefaultRequestHeaders.Remove("X-Company-Automation-ID");
+                    client.DefaultRequestHeaders.Remove("X-Hash");
 
-                return _sessionKey;
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    _sessionKey = JsonConvert.DeserializeObject<string>(responseString);
+
+                    client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+
+                    return _sessionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> GetEncryptionKey(Authentication.IdentityObject2 model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetEncryptionKey", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/GetEncryptionKey", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
-
-                return encryptionKey;
+                    return encryptionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> NewEncryptionKey(Authentication.CreateEncryptionKeyRequest model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/NewEncryptionKey", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/NewEncryptionKey", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
-
-                return encryptionKey;
+                    return encryptionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> RevokeSessionKey()
             {
-                HttpClient client = new HttpClient();
-
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                string baseUrl = _baseUrl;
+                baseUrl = baseUrl.Replace("/Remote", "");
 
                 try
                 {
-                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/SecureMessagingAPI/Account/Logout", "");
+                    HttpResponseMessage response = await client.PostAsJsonAsync(baseUrl + "/SecureMessagingAPI/Account/Logout", "");
                     response.EnsureSuccessStatusCode();
                     string responseString = await response.Content.ReadAsStringAsync();
 
                     _sessionKey = "";
+                    client.DefaultRequestHeaders.Remove("X-Session-Key");
 
                     return responseString;
                 }
@@ -154,87 +175,105 @@ namespace Admin_API_SDK
         {
             public async Task<Account.ListUserAccountsResponse> ListUserAccounts(Account.ListUserAccountsRequest model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/List", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    Account.ListUserAccountsResponse accounts = JsonConvert.DeserializeObject<Account.ListUserAccountsResponse>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/List", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                Account.ListUserAccountsResponse accounts = JsonConvert.DeserializeObject<Account.ListUserAccountsResponse>(responseString);
-
-                return accounts;
+                    return accounts;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.CreateUserResponse> CreateUserAccount(Account.CreateUserRequest model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Create", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    Account.CreateUserResponse user = JsonConvert.DeserializeObject<Account.CreateUserResponse>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Create", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                Account.CreateUserResponse user = JsonConvert.DeserializeObject<Account.CreateUserResponse>(responseString);
-
-                return user;
+                    return user;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.ViewUserResponse> ViewUserAccount(Account.ViewUserRequest model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Read", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    Account.ViewUserResponse user = JsonConvert.DeserializeObject<Account.ViewUserResponse>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Read", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                Account.ViewUserResponse user = JsonConvert.DeserializeObject<Account.ViewUserResponse>(responseString);
-
-                return user;
+                    return user;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.UpdateUserResponse> UpdateUserAccount(Account.UpdateUserRequest model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Update", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    Account.UpdateUserResponse user = JsonConvert.DeserializeObject<Account.UpdateUserResponse>(responseString);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Update", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                Account.UpdateUserResponse user = JsonConvert.DeserializeObject<Account.UpdateUserResponse>(responseString);
-
-                return user;
+                    return user;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async void DeleteUser(Account.DeleteUserRequest model)
             {
-                HttpClient client = new HttpClient();
-
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
-
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Remote/Account/Delete", model);
-                response.EnsureSuccessStatusCode();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Delete", model);
+                    response.EnsureSuccessStatusCode();
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<List<Account.GetUserTypesResponse>> GetUserTypes()
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Account/GetUserTypes");
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    List<Account.GetUserTypesResponse> userTypes = JsonConvert.DeserializeObject<List<Account.GetUserTypesResponse>>(responseString);
 
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Remote/Account/GetUserTypes");
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                List<Account.GetUserTypesResponse> userTypes = JsonConvert.DeserializeObject<List<Account.GetUserTypesResponse>>(responseString);
-
-                return userTypes;
+                    return userTypes;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -242,47 +281,56 @@ namespace Admin_API_SDK
         {
             public async Task<SMTP_Gateway.SMTPCredentialsResponse> GetCompanySMTPCredentials()
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/SMTP/GetCredentials");
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    SMTP_Gateway.SMTPCredentialsResponse credentials = JsonConvert.DeserializeObject<SMTP_Gateway.SMTPCredentialsResponse>(responseString);
 
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Remote/SMTP/GetCredentials");
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                SMTP_Gateway.SMTPCredentialsResponse credentials = JsonConvert.DeserializeObject<SMTP_Gateway.SMTPCredentialsResponse>(responseString);
-
-                return credentials;
+                    return credentials;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<SMTP_Gateway.ResetPasswordResponse> ResetPassword()
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/ResetPassword", -1);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    SMTP_Gateway.ResetPasswordResponse resetPasswordResponse = JsonConvert.DeserializeObject<SMTP_Gateway.ResetPasswordResponse>(responseString);
 
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/Remote/SMTP/ResetPassword", -1);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                SMTP_Gateway.ResetPasswordResponse resetPasswordResponse = JsonConvert.DeserializeObject<SMTP_Gateway.ResetPasswordResponse>(responseString);
-
-                return resetPasswordResponse;
+                    return resetPasswordResponse;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<SMTP_Gateway.UpdateIPWhitelistResponse> UpdateIPWhitelist(List<SMTP_Gateway.EndpointsObject> model)
             {
-                HttpClient client = new HttpClient();
+                try
+                {
+                    HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/PutSmtpEndpoints", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    SMTP_Gateway.UpdateIPWhitelistResponse whitelistResponse = JsonConvert.DeserializeObject<SMTP_Gateway.UpdateIPWhitelistResponse>(responseString);
 
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/Remote/SMTP/PutSmtpEndpoints", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
-
-                SMTP_Gateway.UpdateIPWhitelistResponse whitelistResponse = JsonConvert.DeserializeObject<SMTP_Gateway.UpdateIPWhitelistResponse>(responseString);
-
-                return whitelistResponse;
+                    return whitelistResponse;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
