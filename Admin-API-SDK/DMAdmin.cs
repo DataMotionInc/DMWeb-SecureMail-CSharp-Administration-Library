@@ -88,37 +88,58 @@ namespace DMWeb_REST_Admin
                 client.DefaultRequestHeaders.Add("X-Company-Automation-ID", automationID);
                 client.DefaultRequestHeaders.Add("X-Hash", hashHeader);
 
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetSessionKey", encryptedPayload);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetSessionKey", encryptedPayload);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                _sessionKey = JsonConvert.DeserializeObject<string>(responseString);
+                    _sessionKey = JsonConvert.DeserializeObject<string>(responseString);
 
-                client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
+                    client.DefaultRequestHeaders.Add("X-Session-Key", _sessionKey);
 
-                return _sessionKey;
+                    return _sessionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> GetEncryptionKey(Authentication.IdentityObject2 model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetEncryptionKey", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetEncryptionKey", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
+                    string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
 
-                return encryptionKey;
+                    return encryptionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> NewEncryptionKey(Authentication.CreateEncryptionKeyRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/NewEncryptionKey", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/NewEncryptionKey", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
+                    string encryptionKey = JsonConvert.DeserializeObject<string>(responseString);
 
-                return encryptionKey;
+                    return encryptionKey;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<string> RevokeSessionKey()
@@ -147,63 +168,105 @@ namespace DMWeb_REST_Admin
         {
             public async Task<Account.ListUserAccountsResponse> ListUserAccounts(Account.ListUserAccountsRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/List", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/List", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                Account.ListUserAccountsResponse accounts = JsonConvert.DeserializeObject<Account.ListUserAccountsResponse>(responseString);
+                    Account.ListUserAccountsResponse accounts = JsonConvert.DeserializeObject<Account.ListUserAccountsResponse>(responseString);
 
-                return accounts;
+                    return accounts;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.CreateUserResponse> CreateUserAccount(Account.CreateUserRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Create", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Create", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                Account.CreateUserResponse user = JsonConvert.DeserializeObject<Account.CreateUserResponse>(responseString);
+                    Account.CreateUserResponse user = JsonConvert.DeserializeObject<Account.CreateUserResponse>(responseString);
 
-                return user;
+                    return user;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.ViewUserResponse> ViewUserAccount(Account.ViewUserRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Read", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Read", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                Account.ViewUserResponse user = JsonConvert.DeserializeObject<Account.ViewUserResponse>(responseString);
+                    Account.ViewUserResponse user = JsonConvert.DeserializeObject<Account.ViewUserResponse>(responseString);
 
-                return user;
+                    return user;
+                }
+                catch(HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<Account.UpdateUserResponse> UpdateUserAccount(Account.UpdateUserRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Update", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Update", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                Account.UpdateUserResponse user = JsonConvert.DeserializeObject<Account.UpdateUserResponse>(responseString);
+                    Account.UpdateUserResponse user = JsonConvert.DeserializeObject<Account.UpdateUserResponse>(responseString);
 
-                return user;
+                    return user;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async void DeleteUser(Account.DeleteUserRequest model)
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Delete", model);
-                response.EnsureSuccessStatusCode();
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/Delete", model);
+                    response.EnsureSuccessStatusCode();
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<List<Account.GetUserTypesResponse>> GetUserTypes()
             {
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Account/GetUserTypes");
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/Account/GetUserTypes");
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                List<Account.GetUserTypesResponse> userTypes = JsonConvert.DeserializeObject<List<Account.GetUserTypesResponse>>(responseString);
+                    List<Account.GetUserTypesResponse> userTypes = JsonConvert.DeserializeObject<List<Account.GetUserTypesResponse>>(responseString);
 
-                return userTypes;
+                    return userTypes;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -211,35 +274,56 @@ namespace DMWeb_REST_Admin
         {
             public async Task<SMTP_Gateway.SMTPCredentialsResponse> GetCompanySMTPCredentials()
             {
-                HttpResponseMessage response = await client.GetAsync(_baseUrl + "/SMTP/GetCredentials");
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(_baseUrl + "/SMTP/GetCredentials");
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                SMTP_Gateway.SMTPCredentialsResponse credentials = JsonConvert.DeserializeObject<SMTP_Gateway.SMTPCredentialsResponse>(responseString);
+                    SMTP_Gateway.SMTPCredentialsResponse credentials = JsonConvert.DeserializeObject<SMTP_Gateway.SMTPCredentialsResponse>(responseString);
 
-                return credentials;
+                    return credentials;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<SMTP_Gateway.ResetPasswordResponse> ResetPassword()
             {
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/ResetPassword", -1);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/ResetPassword", -1);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                SMTP_Gateway.ResetPasswordResponse resetPasswordResponse = JsonConvert.DeserializeObject<SMTP_Gateway.ResetPasswordResponse>(responseString);
+                    SMTP_Gateway.ResetPasswordResponse resetPasswordResponse = JsonConvert.DeserializeObject<SMTP_Gateway.ResetPasswordResponse>(responseString);
 
-                return resetPasswordResponse;
+                    return resetPasswordResponse;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
 
             public async Task<SMTP_Gateway.UpdateIPWhitelistResponse> UpdateIPWhitelist(List<SMTP_Gateway.EndpointsObject> model)
             {
-                HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/PutSmtpEndpoints", model);
-                response.EnsureSuccessStatusCode();
-                string responseString = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    HttpResponseMessage response = await client.PutAsJsonAsync(_baseUrl + "/SMTP/PutSmtpEndpoints", model);
+                    response.EnsureSuccessStatusCode();
+                    string responseString = await response.Content.ReadAsStringAsync();
 
-                SMTP_Gateway.UpdateIPWhitelistResponse whitelistResponse = JsonConvert.DeserializeObject<SMTP_Gateway.UpdateIPWhitelistResponse>(responseString);
+                    SMTP_Gateway.UpdateIPWhitelistResponse whitelistResponse = JsonConvert.DeserializeObject<SMTP_Gateway.UpdateIPWhitelistResponse>(responseString);
 
-                return whitelistResponse;
+                    return whitelistResponse;
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw ex;
+                }
             }
         }
     }
