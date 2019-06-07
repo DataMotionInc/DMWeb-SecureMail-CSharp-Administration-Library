@@ -113,5 +113,11 @@ namespace DMWeb_REST_Admin_Unit_Tests
                 Assert.IsTrue(ex.Message.Contains("401"));
             }
         }
+
+        [OneTimeTearDown]
+        public void LogOut()
+        {
+            AuthenticationContext.admin.Authentication.RevokeSessionKey().GetAwaiter().GetResult();
+        }
     }
 }

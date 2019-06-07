@@ -91,6 +91,12 @@ namespace DMWeb_REST_Admin
                 try
                 {
                     HttpResponseMessage response = await client.PostAsJsonAsync(_baseUrl + "/Account/GetSessionKey", encryptedPayload);
+
+                    client.DefaultRequestHeaders.Remove("X-Email");
+                    client.DefaultRequestHeaders.Remove("X-Iv");
+                    client.DefaultRequestHeaders.Remove("X-Company-Automation-ID");
+                    client.DefaultRequestHeaders.Remove("X-Hash");
+
                     response.EnsureSuccessStatusCode();
                     string responseString = await response.Content.ReadAsStringAsync();
 
@@ -154,6 +160,7 @@ namespace DMWeb_REST_Admin
                     string responseString = await response.Content.ReadAsStringAsync();
 
                     _sessionKey = "";
+                    client.DefaultRequestHeaders.Remove("X-Session-Key");
 
                     return responseString;
                 }

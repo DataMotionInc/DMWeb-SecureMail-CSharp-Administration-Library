@@ -88,5 +88,11 @@ namespace DMWeb_REST_Admin_Unit_Tests
                 Assert.IsTrue(ex.Message.Contains("400"));
             }
         }
+
+        [OneTimeTearDown]
+        public void LogOut()
+        {
+            AuthenticationContext.admin.Authentication.RevokeSessionKey().GetAwaiter().GetResult();
+        }
     }
 }
