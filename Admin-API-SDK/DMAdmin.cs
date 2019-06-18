@@ -12,7 +12,7 @@ namespace DMWeb_REST_Admin
 {
     public class DMAdmin
     {
-        private static HttpClient client = new HttpClient();
+        public static HttpClient client = new HttpClient();
         public static string _baseUrl = "";
         public static string _sessionKey = "";
 
@@ -96,6 +96,7 @@ namespace DMWeb_REST_Admin
                     client.DefaultRequestHeaders.Remove("X-Iv");
                     client.DefaultRequestHeaders.Remove("X-Company-Automation-ID");
                     client.DefaultRequestHeaders.Remove("X-Hash");
+                    client.DefaultRequestHeaders.Remove("X-Session-Key");
 
                     response.EnsureSuccessStatusCode();
                     string responseString = await response.Content.ReadAsStringAsync();
