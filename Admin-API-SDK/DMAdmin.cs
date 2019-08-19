@@ -109,6 +109,11 @@ namespace DMWeb_REST_Admin
                 }
                 catch (HttpRequestException ex)
                 {
+                    client.DefaultRequestHeaders.Remove("X-Email");
+                    client.DefaultRequestHeaders.Remove("X-Iv");
+                    client.DefaultRequestHeaders.Remove("X-Company-Automation-ID");
+                    client.DefaultRequestHeaders.Remove("X-Hash");
+
                     throw ex;
                 }
             }
@@ -246,7 +251,7 @@ namespace DMWeb_REST_Admin
                 }
             }
 
-            public async void DeleteUser(Account.DeleteUserRequest model)
+            public async Task DeleteUser(Account.DeleteUserRequest model)
             {
                 try
                 {
